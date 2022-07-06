@@ -41,13 +41,13 @@ using namespace std;
 class Serveur
 {
 public:
-    explicit Serveur(Reseau* structReseau);
+    explicit Serveur(Game* structGame);
 
     ~Serveur();
 
     void listenerThread(unsigned short port);
 
-    void ClientThread(SOCKET current_client, Reseau* structReseau);
+    void ClientThread(SOCKET current_client, Game* structGame);
 
     void launchListenerThread(unsigned short port);
      
@@ -62,7 +62,7 @@ private:
     std::vector<unsigned long long> adresse;
     vector<std::thread> threads;
     vector<SOCKADDR_IN> clientsAddr;
-    Reseau* structReseau;
+    Game* structGame;
     int nClient = 0;
     bool connected = false;
 };

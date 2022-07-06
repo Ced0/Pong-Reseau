@@ -8,23 +8,23 @@
 #include "serveur.h"
 #include "ServerUDP.h"
 #include "ClientUDP.h"
-//#include <SFML/System/Time.hpp>
+#include "wsainit.h"
 
 #pragma comment(lib, "ws2_32.lib")
 
-//#include "Input.h"
-
 #define MAX_CLIENT 1
 
-void gameLoopServeur(Reseau& structReseau, ServerUDP* servUDP);
+void gameLoopServeur(Game& structGame, ServerUDP* servUDP);
 
-void gameLoopClient(Reseau& structReseau, Client* client, ClientUDP* clientUDP);
+void gameLoopClient(Game& structGame, Client* client, ClientUDP* clientUDP);
 
 void ball_reset(float& dx, float& dy, Kinematic& ball);
 
 int main(int argc, char** argv)
 {
-	struct Reseau structReseau;
+	WSAInit wsa;
+
+	struct Game structGame;
 
 	std::string menu;
 
@@ -63,20 +63,20 @@ int main(int argc, char** argv)
 
 		Kinematic player(10, 100, 20, 250, 0, 0, 0, 255);//Création des variables/objets utlisié dans le thread réseau
 
-		structReseau.colliders_kinematic.push_back(player);
-		structReseau.colliders_kinematic.push_back(player);
+		structGame.colliders_kinematic.push_back(player);
+		structGame.colliders_kinematic.push_back(player);
 		player.set_size(20, 20);
-		structReseau.colliders_kinematic.push_back(player);
+		structGame.colliders_kinematic.push_back(player);
 
-		std::thread threadReception(receptionTCP, &structReseau, &client);//Lancement thread Réseau et de la fonction principale du jeu
+		std::thread threadReception(receptionTCP, &structGame, &client);//Lancement thread Réseau et de la fonction principale du jeu
 
-		gameLoopClient(structReseau, &client, &clientUDP);
+		gameLoopClient(structGame, &client, &clientUDP);
 
 
-		if (structReseau._exit == false)//Si le Client quitte, on envoie un message au serveur
+		if (structGame._exit == false)//Si le Client quitte, on envoie un message au serveur
 		{
 			
-			structReseau._exit = true;
+			structGame._exit = true;
 			threadReception.join();
 
 			char buffer[] = "bye";
@@ -97,28 +97,22 @@ int main(int argc, char** argv)
 		bool connecte = false;
 
 		Kinematic player(10, 100, 20, 250, 0, 0, 0, 255);
-		structReseau.colliders_kinematic.push_back(player);//Joueur local (serveur)
+		structGame.colliders_kinematic.push_back(player);//Joueur local (serveur)
 
 
 		player.set_pos(780, 250);
-		structReseau.colliders_kinematic.push_back(player);//Joueur client
+		structGame.colliders_kinematic.push_back(player);//Joueur client
 
 
 		player.set_pos(390, 290);
 		player.set_size(20, 20);
-		structReseau.colliders_kinematic.push_back(player);//Ball
-		structReseau.maxClient = MAX_CLIENT;
+		structGame.colliders_kinematic.push_back(player);//Ball
+		structGame.maxClient = MAX_CLIENT;
 
-		Serveur serv(&structReseau);
+		Serveur serv(&structGame);
 		serv.launchListenerThread(5300);
 
 		ServerUDP servUDP(5301);
-
-		//std::thread threadReception(clientServeur, &connecte, &structReseau);
-
-		//std::cout << "Adresse Local : " << menu << std::endl;
-
-		//std::cout << "Adresse Publique : " << menu << std::endl;
 
 		while (serv.isConnected() == false)//En attandant d'etre connecté, broadcast ?, affichage IP
 		{
@@ -131,18 +125,9 @@ int main(int argc, char** argv)
 			servUDP.addClient(serv.getClient(i));
 		}
 
-		//std::cout << structReseau.tcpSocket->getRemoteAddress().toString();
-		gameLoopServeur(structReseau, &servUDP);
+		gameLoopServeur(structGame, &servUDP);
 
-		structReseau._exit = true;
-
-		//threadReception.join();
-
-		/*if (structReseau.connecte == true)//Si le Client est toujours connecté, on lui dit que le Serveur se deconnecte
-		{
-			structReseau.connecte = false;
-			envoieServeur(false, structReseau);
-		}*/
+		structGame._exit = true;
 
 	}
 	else {
@@ -150,13 +135,10 @@ int main(int argc, char** argv)
 		std::cout << "Erreur menu";
 	}
 
-	//structReseau.udpSocket->unbind();
-	//structReseau.tcpSocket->disconnect();
-
 	return 0;
 }
 
-void gameLoopServeur(Reseau& structReseau, ServerUDP* servUDP)//Fonction Jeu Serveur
+void gameLoopServeur(Game& structGame, ServerUDP* servUDP)//Fonction Jeu Serveur
 {
 	srand(time(NULL));
 
@@ -170,16 +152,12 @@ void gameLoopServeur(Reseau& structReseau, ServerUDP* servUDP)//Fonction Jeu Ser
 	if (!police)
 	{
 		std::cout << TTF_GetError() << std::endl;
-		//system("pause");
 		return;
 	}
 
 	Mix_Chunk* snd_pong_paddle = Mix_LoadWAV("res/ping_pong_8bit_beeep.wav");//Son
-	//Window.set_sound(snd_pong_paddle);
 	Mix_Chunk* snd_pong_goal = Mix_LoadWAV("res/ping_pong_8bit_peeeeeep.wav");
-	//Window.set_sound(snd_pong_paddle);
 	Mix_Chunk* snd_pong_wall = Mix_LoadWAV("res/ping_pong_8bit_plop.wav");
-	//Window.set_sound(snd_pong_paddle);
 
 	if (snd_pong_paddle == NULL || snd_pong_goal == NULL || snd_pong_wall == NULL)
 	{
@@ -195,26 +173,26 @@ void gameLoopServeur(Reseau& structReseau, ServerUDP* servUDP)//Fonction Jeu Ser
 
 	unsigned int timer = 0;
 
-	ball_reset(dx, dy, structReseau.colliders_kinematic[2]);
+	ball_reset(dx, dy, structGame.colliders_kinematic[2]);
 
 	Text text_score1(Window::renderer, "0", { 255, 0, 0, 255 }, police);
 	Text text_score2(Window::renderer, "0", { 255, 0, 0, 255 }, police);
 
 	std::thread threadEnvoie;
 
-	while (!Window.isClosed() && structReseau.connecte == true)//Main loop
+	while (!Window.isClosed() && structGame.connecte == true)//Main loop
 	{
 
-		pollEventsServeur(Window, structReseau.colliders_kinematic[0]);//Input Joueur local
+		pollEventsServeur(Window, structGame.colliders_kinematic[0]);//Input Joueur local
 
 		if (timer + 42 < SDL_GetTicks())
 		{
 
 			timer = SDL_GetTicks();
 
-			structReseau.snd_goal = false;
-			structReseau.snd_paddle = false;
-			structReseau.snd_wall = false;
+			structGame.snd_goal = false;
+			structGame.snd_paddle = false;
+			structGame.snd_wall = false;
 
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////Joueur
 
@@ -222,55 +200,55 @@ void gameLoopServeur(Reseau& structReseau, ServerUDP* servUDP)//Fonction Jeu Ser
 			{
 				if (i == 1)
 				{
-					structReseau.mute.lock();
+					structGame.mute.lock();
 				}
 
-				structReseau.colliders_kinematic[i].input_movement(structReseau.colliders_kinematic, i, false, true);
+				structGame.colliders_kinematic[i].input_movement(structGame.colliders_kinematic, i, false, true);
 
-				if (structReseau.colliders_kinematic[i].get_y() < 0)
+				if (structGame.colliders_kinematic[i].get_y() < 0)
 				{
-					structReseau.colliders_kinematic[i].move(0, -structReseau.colliders_kinematic[i].get_y());
+					structGame.colliders_kinematic[i].move(0, -structGame.colliders_kinematic[i].get_y());
 				}
 
-				if (structReseau.colliders_kinematic[i].get_y2() > 600)
+				if (structGame.colliders_kinematic[i].get_y2() > 600)
 				{
-					structReseau.colliders_kinematic[i].move(0, 600 - structReseau.colliders_kinematic[i].get_y2());
+					structGame.colliders_kinematic[i].move(0, 600 - structGame.colliders_kinematic[i].get_y2());
 				}
 
 				if (i == 1)
 				{
-					structReseau.mute.unlock();
+					structGame.mute.unlock();
 				}
 			}
 
 			///////////////////////////////////////////////////////////////////////////////////////////////////Ball
-			if (structReseau.colliders_kinematic[2].get_y() + dy < 0 || structReseau.colliders_kinematic[2].get_y2() + dy > 600) {
+			if (structGame.colliders_kinematic[2].get_y() + dy < 0 || structGame.colliders_kinematic[2].get_y2() + dy > 600) {
 				dy = -dy;
 				Mix_PlayChannel(-1, snd_pong_wall, 0);
-				structReseau.snd_wall = true;
+				structGame.snd_wall = true;
 
 			}
 
-			if (structReseau.colliders_kinematic[2].get_x() + dx < 0)
+			if (structGame.colliders_kinematic[2].get_x() + dx < 0)
 			{
-				structReseau.score1++;
-				text_score1.change_text(std::to_string(structReseau.score1), Window::renderer);
-				ball_reset(dx, dy, structReseau.colliders_kinematic[2]);
+				structGame.score1++;
+				text_score1.change_text(std::to_string(structGame.score1), Window::renderer);
+				ball_reset(dx, dy, structGame.colliders_kinematic[2]);
 				Mix_PlayChannel(-1, snd_pong_goal, 0);
-				structReseau.snd_goal = true;
+				structGame.snd_goal = true;
 
 
 			}
-			else if (structReseau.colliders_kinematic[2].get_x2() + dx > 800)
+			else if (structGame.colliders_kinematic[2].get_x2() + dx > 800)
 			{
-				structReseau.score2++;
-				text_score2.change_text(std::to_string(structReseau.score2), Window::renderer);
-				ball_reset(dx, dy, structReseau.colliders_kinematic[2]);
+				structGame.score2++;
+				text_score2.change_text(std::to_string(structGame.score2), Window::renderer);
+				ball_reset(dx, dy, structGame.colliders_kinematic[2]);
 				Mix_PlayChannel(-1, snd_pong_goal, 0);
-				structReseau.snd_goal = true;
+				structGame.snd_goal = true;
 			}
 
-			collide_ball = structReseau.colliders_kinematic[2].move(structReseau.colliders_kinematic, 2, dx, dy);
+			collide_ball = structGame.colliders_kinematic[2].move(structGame.colliders_kinematic, 2, dx, dy);
 
 			switch (collide_ball) {
 			case 'x':
@@ -290,7 +268,7 @@ void gameLoopServeur(Reseau& structReseau, ServerUDP* servUDP)//Fonction Jeu Ser
 				dx *= 1.1;
 				dy *= 1.1;
 				Mix_PlayChannel(-1, snd_pong_paddle, 0);
-				structReseau.snd_paddle = true;
+				structGame.snd_paddle = true;
 			}
 
 			//////////////////////////////////////////////////////////////////////////////////////////Affichage
@@ -299,9 +277,9 @@ void gameLoopServeur(Reseau& structReseau, ServerUDP* servUDP)//Fonction Jeu Ser
 
 			Window.clear();
 
-			for (unsigned char i = 0; i < structReseau.colliders_kinematic.size(); i++)
+			for (unsigned char i = 0; i < structGame.colliders_kinematic.size(); i++)
 			{
-				structReseau.colliders_kinematic[i].draw();
+				structGame.colliders_kinematic[i].draw();
 			}
 
 			text_score1.display(760, 20, Window::renderer);
@@ -309,22 +287,14 @@ void gameLoopServeur(Reseau& structReseau, ServerUDP* servUDP)//Fonction Jeu Ser
 
 
 			////////////////////////////////////////////////////////////////////////////////////////Envoie du jeu au Client
-			/*if (threadEnvoie.joinable())
-			{
-				threadEnvoie.join();
-			}*/
 
 			//Socket is non-blocking, so I guess it won't take much time
-			sendGame(&structReseau, servUDP);
-			//threadEnvoie = std::thread(envoieServeur, true, structReseau);
+			sendGame(&structGame, servUDP);
 		}
 
 	}
 
 	/////////////////////////////////////////////////////Fermeture
-
-	//threadEnvoie.join();
-
 	Mix_FreeChunk(snd_pong_wall);
 	Mix_FreeChunk(snd_pong_paddle);
 	Mix_FreeChunk(snd_pong_goal);
@@ -358,7 +328,7 @@ void ball_reset(float& dx, float& dy, Kinematic& ball)
 
 
 
-void gameLoopClient(Reseau& structReseau, Client *client, ClientUDP *clientUDP)
+void gameLoopClient(Game& structGame, Client *client, ClientUDP *clientUDP)
 {
 
 	/////////////////////////////////////////////////////////////////////////////////Chargement des ressource du Jeu
@@ -370,16 +340,12 @@ void gameLoopClient(Reseau& structReseau, Client *client, ClientUDP *clientUDP)
 	if (!police)
 	{
 		std::cout << TTF_GetError() << std::endl;
-		//system("pause");
 		return;
 	}
 
 	Mix_Chunk* snd_pong_paddle = Mix_LoadWAV("res/ping_pong_8bit_beeep.wav");//Son
-	//Window.set_sound(snd_pong_paddle);
 	Mix_Chunk* snd_pong_goal = Mix_LoadWAV("res/ping_pong_8bit_peeeeeep.wav");
-	//Window.set_sound(snd_pong_paddle);
 	Mix_Chunk* snd_pong_wall = Mix_LoadWAV("res/ping_pong_8bit_plop.wav");
-	//Window.set_sound(snd_pong_paddle);
 
 	if (snd_pong_paddle == NULL || snd_pong_goal == NULL || snd_pong_wall == NULL)
 	{
@@ -390,53 +356,50 @@ void gameLoopClient(Reseau& structReseau, Client *client, ClientUDP *clientUDP)
 	Text text_score1(Window::renderer, "0", { 255, 0, 0, 255 }, police);
 	Text text_score2(Window::renderer, "0", { 255, 0, 0, 255 }, police);
 
-	//unsigned int timer = 0;
-
-
 	Window.clear();
 	/////////////////////////////////////////////////////////////////////////////////////////////Boucle du jeu
-	while (!Window.isClosed() && !structReseau._exit)//Main loop
+	while (!Window.isClosed() && !structGame._exit)//Main loop
 	{
 
-		pollEventsClient(Window, structReseau, client);
+		pollEventsClient(Window, structGame, client);
 
 		char buff[sizeof(int) * 8 + 1];
 
 		//if (timer + 42 < SDL_GetTicks())
 		if(clientUDP->recv(buff, sizeof(int) * 8 + 1) == true)
 		{
-			receiveGame(buff, &structReseau);
+			receiveGame(buff, &structGame);
 			//timer = SDL_GetTicks();
 
 			/////////////////////////////////////////////////////////////////Affichage
 			Window.clear();
 
-			for (unsigned char i = 0; i < structReseau.colliders_kinematic.size(); i++)
+			for (unsigned char i = 0; i < structGame.colliders_kinematic.size(); i++)
 			{
-				structReseau.colliders_kinematic[i].draw();
+				structGame.colliders_kinematic[i].draw();
 			}
 
-			text_score1.change_text(std::to_string(structReseau.score1), Window::renderer);
-			text_score2.change_text(std::to_string(structReseau.score2), Window::renderer);
+			text_score1.change_text(std::to_string(structGame.score1), Window::renderer);
+			text_score2.change_text(std::to_string(structGame.score2), Window::renderer);
 
 			text_score1.display(760, 20, Window::renderer);
 			text_score2.display(20, 20, Window::renderer);
 
 
 			//////////////////////////////////////////////////////////////////Son
-			if (structReseau.snd_goal)
+			if (structGame.snd_goal)
 				Mix_PlayChannel(-1, snd_pong_goal, 0);
 
-			if (structReseau.snd_paddle)
+			if (structGame.snd_paddle)
 				Mix_PlayChannel(-1, snd_pong_paddle, 0);
 
-			if (structReseau.snd_wall)
+			if (structGame.snd_wall)
 				Mix_PlayChannel(-1, snd_pong_wall, 0);
 
 
-			structReseau.snd_goal = false;
-			structReseau.snd_paddle = false;
-			structReseau.snd_wall = false;
+			structGame.snd_goal = false;
+			structGame.snd_paddle = false;
+			structGame.snd_wall = false;
 		}
 
 	}

@@ -1,15 +1,15 @@
 #include "stdafx.h"
 #include "serveur.h"
 
-Serveur::Serveur(Reseau* _structReseau)
+Serveur::Serveur(Game* _structGame)
 {
     //threads.push_back(std::thread(&Serveur::listenerThread, this, port));
-    structReseau = _structReseau;
+    structGame = _structGame;
 }
 
 Serveur::~Serveur()
 {
-    structReseau->_exit = true;
+    structGame->_exit = true;
 
     for (int i = 0; i < threads.size(); i++)
     {
@@ -104,7 +104,7 @@ void Serveur::listenerThread(unsigned short port)
 
     tempo = sizeof(information_sur_la_source);//passer par une variable afin d'utiliser un pointeur
 
-    while(structReseau->_exit == false && nClient < structReseau->maxClient)
+    while(structGame->_exit == false && nClient < structGame->maxClient)
     {
         #ifdef __linux__
         socket_travail = accept(socket_ecoute,(struct sockaddr*)&information_sur_la_source, (socklen_t*)&tempo);
@@ -116,7 +116,7 @@ void Serveur::listenerThread(unsigned short port)
             //qDebug() << "\nDesole, je peux pas accepter la session TCP du a l'erreur : " << WSAGetLastError() << endl;
         }else{
             std::cout << "accpet() : OK" << endl;
-            threads.push_back(std::thread(&Serveur::ClientThread, this, socket_travail, structReseau));
+            threads.push_back(std::thread(&Serveur::ClientThread, this, socket_travail, structGame));
             clientsAddr.push_back(information_sur_la_source);
             nClient++;
             //emit newConnection();
@@ -126,14 +126,14 @@ void Serveur::listenerThread(unsigned short port)
     std::cout << "Max clients connected" << endl;
 
     connected = true;
-    structReseau->connecte = true;
+    structGame->connecte = true;
 
     shutdown(socket_ecoute, 2);
     closesocket(socket_ecoute);
 
 }
 
-void Serveur::ClientThread(SOCKET current_client, Reseau* structReseau)
+void Serveur::ClientThread(SOCKET current_client, Game* structGame)
 {
     std::cout << "creation du thread associe a un client ..\n";
     //recupere le socket passe en tant que parametre
@@ -142,7 +142,7 @@ void Serveur::ClientThread(SOCKET current_client, Reseau* structReseau)
     char sendData[10] = {0};
     int res;
     //boucle de reception des données du client
-    while(structReseau->_exit == false)
+    while(structGame->_exit == false)
     {
 
         memset(buf, 0, 10);
@@ -173,10 +173,10 @@ void Serveur::ClientThread(SOCKET current_client, Reseau* structReseau)
             closesocket(current_client);
             //std::terminate();
 
-            structReseau->mute.lock();
-            structReseau->connecte = false;
-            structReseau->_exit = true;
-            structReseau->mute.unlock();
+            structGame->mute.lock();
+            structGame->connecte = false;
+            structGame->_exit = true;
+            structGame->mute.unlock();
 
         }else{//We recieved the data
             bool press;
@@ -194,14 +194,14 @@ void Serveur::ClientThread(SOCKET current_client, Reseau* structReseau)
             
             key = buf[1];
 
-            structReseau->mute.lock();
-            structReseau->colliders_kinematic[1].keyboardEvents(key, press);
-            structReseau->mute.unlock();
+            structGame->mute.lock();
+            structGame->colliders_kinematic[1].keyboardEvents(key, press);
+            structGame->mute.unlock();
         }
     }
 
     //Tell clients we are leaving
-    if (structReseau->connecte == true)
+    if (structGame->connecte == true)
     {
         strcpy_s(sendData, "bye");
         send(current_client, sendData, 4, 0);

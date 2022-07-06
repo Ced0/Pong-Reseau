@@ -9,10 +9,10 @@
 #include <mutex>
 #include "ServerUDP.h"
 
-struct Reseau {
+struct Game {
 
-	Reseau() { copie = false; }
-	Reseau(const Reseau& copy) : _exit(copy._exit), colliders_kinematic(copy.colliders_kinematic), score1(copy.score1), score2(copy.score2), snd_paddle(copy.snd_paddle), snd_goal(copy.snd_goal), snd_wall(copy.snd_wall) { copie = true; }
+	Game() { copie = false; }
+	Game(const Game& copy) : _exit(copy._exit), colliders_kinematic(copy.colliders_kinematic), score1(copy.score1), score2(copy.score2), snd_paddle(copy.snd_paddle), snd_goal(copy.snd_goal), snd_wall(copy.snd_wall) { copie = true; }
 
 	bool _exit = false;
 
@@ -31,18 +31,13 @@ struct Reseau {
 	std::mutex mute;
 };
 
-void envoieClient(bool playing, struct Reseau structReseau, Client* client, unsigned char key = 0, bool press = false);//Envoie
-void envoieServeur(bool playing, struct Reseau structReseau);
+void envoieClient(bool playing, struct Game structGame, Client* client, unsigned char key = 0, bool press = false);//Envoie
 
-void clientServeur(bool* connecte, struct Reseau* structReseau);//Reception
-void receptionTCP(struct Reseau* structReseau, Client* client);
+void receptionTCP(struct Game* structGame, Client* client);
 
-void sendGame(struct Reseau* structReseau, ServerUDP* server);//Envoie et reception Serveur vers Client
-void receiveGame(char* buff, struct  Reseau* structReseau);
-
-//void sendInput(sf::Packet& packet, bool press, unsigned char key);//Envoie et reception Client vers Serveur
-bool receiveInput(sf::Packet& packet, struct Reseau* structReseau);
+void sendGame(struct Game* structGame, ServerUDP* server);//Envoie et reception Serveur vers Client
+void receiveGame(char* buff, struct  Game* structGame);
 
 void pollEventsServeur(Window& window, Kinematic& player);
 
-void pollEventsClient(Window& window, struct Reseau structReseau, Client* client);
+void pollEventsClient(Window& window, struct Game structGame, Client* client);
