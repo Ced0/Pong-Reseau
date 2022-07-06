@@ -1,0 +1,34 @@
+﻿     Création de la bibliothèque C:\Users\CC\Desktop\Pong\x64\Debug\Pong.lib et de l'objet C:\Users\CC\Desktop\Pong\x64\Debug\Pong.exp
+ConsoleApplication1.obj : error LNK2019: symbole externe non résolu SDL_PollEvent référencé dans la fonction "void __cdecl pollEvents(class Window &,class Player &)" (?pollEvents@@YAXAEAVWindow@@AEAVPlayer@@@Z)
+Rect.obj : error LNK2019: symbole externe non résolu SDL_FreeSurface référencé dans la fonction "public: __cdecl Rect::Rect(int,int,int,int,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (??0Rect@@QEAA@HHHHAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)
+Text.obj : error LNK2001: symbole externe non résolu SDL_FreeSurface
+Rect.obj : error LNK2019: symbole externe non résolu SDL_CreateTextureFromSurface référencé dans la fonction "public: __cdecl Rect::Rect(int,int,int,int,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (??0Rect@@QEAA@HHHHAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)
+Text.obj : error LNK2001: symbole externe non résolu SDL_CreateTextureFromSurface
+Rect.obj : error LNK2019: symbole externe non résolu SDL_SetRenderDrawColor référencé dans la fonction "public: void __cdecl Rect::draw(void)const " (?draw@Rect@@QEBAXXZ)
+Window.obj : error LNK2001: symbole externe non résolu SDL_SetRenderDrawColor
+Rect.obj : error LNK2019: symbole externe non résolu SDL_RenderFillRect référencé dans la fonction "public: void __cdecl Rect::draw(void)const " (?draw@Rect@@QEBAXXZ)
+Rect.obj : error LNK2019: symbole externe non résolu SDL_RenderCopy référencé dans la fonction "public: void __cdecl Rect::draw(void)const " (?draw@Rect@@QEBAXXZ)
+Text.obj : error LNK2001: symbole externe non résolu SDL_RenderCopy
+Rect.obj : error LNK2019: symbole externe non résolu SDL_DestroyTexture référencé dans la fonction "public: __cdecl Rect::~Rect(void)" (??1Rect@@QEAA@XZ)
+Rect.obj : error LNK2019: symbole externe non résolu IMG_Load référencé dans la fonction "public: __cdecl Rect::Rect(int,int,int,int,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (??0Rect@@QEAA@HHHHAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)
+Text.obj : error LNK2019: symbole externe non résolu SDL_QueryTexture référencé dans la fonction "public: __cdecl Text::Text(struct SDL_Renderer *,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,int,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,struct SDL_Color const &)" (??0Text@@QEAA@PEAUSDL_Renderer@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@H1AEBUSDL_Color@@@Z)
+Text.obj : error LNK2019: symbole externe non résolu TTF_OpenFont référencé dans la fonction "public: static struct SDL_Texture * __cdecl Text::loadFont(struct SDL_Renderer *,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,int,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,struct SDL_Color const &)" (?loadFont@Text@@SAPEAUSDL_Texture@@PEAUSDL_Renderer@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@H1AEBUSDL_Color@@@Z)
+Text.obj : error LNK2019: symbole externe non résolu TTF_RenderText_Solid référencé dans la fonction "public: static struct SDL_Texture * __cdecl Text::loadFont(struct SDL_Renderer *,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,int,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,struct SDL_Color const &)" (?loadFont@Text@@SAPEAUSDL_Texture@@PEAUSDL_Renderer@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@H1AEBUSDL_Color@@@Z)
+Window.obj : error LNK2019: symbole externe non résolu SDL_CreateWindow référencé dans la fonction "private: bool __cdecl Window::init(void)" (?init@Window@@AEAA_NXZ)
+Window.obj : error LNK2019: symbole externe non résolu SDL_DestroyWindow référencé dans la fonction "public: __cdecl Window::~Window(void)" (??1Window@@QEAA@XZ)
+Window.obj : error LNK2019: symbole externe non résolu SDL_CreateRenderer référencé dans la fonction "private: bool __cdecl Window::init(void)" (?init@Window@@AEAA_NXZ)
+Window.obj : error LNK2019: symbole externe non résolu SDL_RenderClear référencé dans la fonction "public: void __cdecl Window::clear(void)const " (?clear@Window@@QEBAXXZ)
+Window.obj : error LNK2019: symbole externe non résolu SDL_RenderPresent référencé dans la fonction "public: void __cdecl Window::clear(void)const " (?clear@Window@@QEBAXXZ)
+Window.obj : error LNK2019: symbole externe non résolu SDL_DestroyRenderer référencé dans la fonction "public: __cdecl Window::~Window(void)" (??1Window@@QEAA@XZ)
+Window.obj : error LNK2019: symbole externe non résolu SDL_Init référencé dans la fonction "private: bool __cdecl Window::init(void)" (?init@Window@@AEAA_NXZ)
+Window.obj : error LNK2019: symbole externe non résolu SDL_Quit référencé dans la fonction "public: __cdecl Window::~Window(void)" (??1Window@@QEAA@XZ)
+Window.obj : error LNK2019: symbole externe non résolu IMG_Init référencé dans la fonction "private: bool __cdecl Window::init(void)" (?init@Window@@AEAA_NXZ)
+Window.obj : error LNK2019: symbole externe non résolu IMG_Quit référencé dans la fonction "public: __cdecl Window::~Window(void)" (??1Window@@QEAA@XZ)
+Window.obj : error LNK2019: symbole externe non résolu TTF_Init référencé dans la fonction "private: bool __cdecl Window::init(void)" (?init@Window@@AEAA_NXZ)
+Window.obj : error LNK2019: symbole externe non résolu TTF_Quit référencé dans la fonction "public: __cdecl Window::~Window(void)" (??1Window@@QEAA@XZ)
+MSVCRTD.lib(exe_main.obj) : error LNK2019: symbole externe non résolu main référencé dans la fonction "int __cdecl invoke_main(void)" (?invoke_main@@YAHXZ)
+C:\Users\CC\Desktop\Pong\deps\lib\SDL2.lib : warning LNK4272: type d'ordinateur bibliothèque 'x86' en conflit avec le type d'ordinateur cible 'x64'
+C:\Users\CC\Desktop\Pong\deps\lib\SDL2main.lib : warning LNK4272: type d'ordinateur bibliothèque 'x86' en conflit avec le type d'ordinateur cible 'x64'
+C:\Users\CC\Desktop\Pong\deps\lib\SDL2_ttf.lib : warning LNK4272: type d'ordinateur bibliothèque 'x86' en conflit avec le type d'ordinateur cible 'x64'
+C:\Users\CC\Desktop\Pong\deps\lib\SDL2_image.lib : warning LNK4272: type d'ordinateur bibliothèque 'x86' en conflit avec le type d'ordinateur cible 'x64'
+C:\Users\CC\Desktop\Pong\x64\Debug\Pong.exe : fatal error LNK1120: 24 externes non résolus

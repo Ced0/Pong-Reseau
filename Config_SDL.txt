@@ -1,0 +1,19 @@
+Paramètre du projet
+	Repertoir VC++
+		Repertoire Librairie (de bibliothèques)
+		Repertoire Include
+
+
+$(SolutionDir)\deps\include;$(IncludePath)
+$(SolutionDir)\deps\lib;$(LibraryPath)
+
+Editeur de lien Entré
+	Dépendances Supplémentaires
+
+(Mode X86)
+
+SDL2.lib
+SDL2main.lib
+SDL2_ttf.lib
+SDL2_image.lib
+SDL2_mixer.lib
