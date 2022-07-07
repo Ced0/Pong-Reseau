@@ -1,3 +1,7 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(513,5): warning MSB8028: Le répertoire intermédiaire (Debug\) contient des fichiers partagés provenant d'un autre projet (ConsoleApplication1.vcxproj). Cela peut entraîner un comportement de nettoyage et de regénération incorrect.
-  Reseau.cpp
+  ClientUDP.cpp
+  serveur.cpp
+C:\Users\bossC\Documents\Cedric\C++\Repos\Pong-Reseau\ConsoleApplication1\serveur.cpp(14,23): warning C4018: '<' : incompatibilité signed/unsigned
+C:\Users\bossC\Documents\Cedric\C++\Repos\Pong-Reseau\ConsoleApplication1\serveur.cpp(22,23): warning C4018: '<' : incompatibilité signed/unsigned
+  Génération de code en cours...
   ConsoleApplication1.vcxproj -> C:\Users\bossC\Documents\Cedric\C++\Repos\Pong-Reseau\Debug\Pong.exe

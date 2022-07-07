@@ -17,7 +17,7 @@ ClientUDP::ClientUDP(const char* ip, unsigned short port)
 	memset((char*)&sockaddr, 0, sizeof(sockaddr));
 	sockaddr.sin_family = AF_INET;
 	sockaddr.sin_port = htons(port);
-	sockaddr.sin_addr.S_un.S_addr = inet_addr(ip);
+	sockaddr.sin_addr.S_un.S_addr = INADDR_ANY;// inet_addr(ip);
 
 	if (bind(mySocket, (struct sockaddr*)&sockaddr, sizeof(sockaddr)) == SOCKET_ERROR)
 	{
