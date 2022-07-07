@@ -2,7 +2,6 @@
 #include "stdafx.h"
 #include <iostream>
 #include <thread>
-#include <SFML/Network.hpp>
 #include <vector>
 #include "Rect.h"
 #include "client.h"
@@ -22,6 +21,9 @@ struct Game {
 	int score2 = 0;
 
 	bool snd_paddle = false, snd_goal = false, snd_wall = false;
+
+	bool left = false;
+	bool right = false;
 
 	bool copie;
 

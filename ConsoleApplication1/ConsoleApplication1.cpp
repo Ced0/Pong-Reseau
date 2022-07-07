@@ -32,9 +32,6 @@ int main(int argc, char** argv)
 	std::cout << "Menu serveur/client : \n";
 	std::cin >> menu;
 
-	//sf::Time time = sf::seconds(float(420));
-
-
 
 	if (menu == "client")
 	{
@@ -42,10 +39,7 @@ int main(int argc, char** argv)
 		std::cout << "Entrez adresse IP serveur \n";//Connexion du client
 		std::cin >> menu;
 
-		//sf::Socket::Status status = structReseau.tcpSocket->connect(menu, 5300, time);
 		Client client(menu.c_str(), 5300);
-
-		//structReseau.udpSocket->bind(5300);
 
 		std::cout << "Connexion\n";
 
@@ -83,7 +77,6 @@ int main(int argc, char** argv)
 
 			client.envoie(buffer, sizeof(buffer));
 			std::cout << "sent bye" << std::endl;
-			//envoieClient(false, structReseau, 0, false);
 		}
 
 		if (threadReception.joinable())

@@ -89,7 +89,7 @@ bool Client::envoie(const char *buffer, int size)
         return false;
     }
 
-    std::cout << "Envoie effectuer" << endl;
+    //std::cout << "Envoie effectuer" << endl;
     return true;
 }
 
@@ -105,7 +105,7 @@ bool Client::reception(char *buffer, int size)
         
         return false;
     }else{
-        std::cout << "Reception effectuer " << n << endl;
+        //std::cout << "Reception effectuer " << n << endl;
         return true;
     }
 }

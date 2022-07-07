@@ -159,10 +159,18 @@ void pollEventsClient(Window& window, struct Game structGame, Client* client) //
 			switch (event.key.keysym.sym)
 			{
 			case SDLK_LEFT:
-				envoieClient(true, structGame, client, 4, press);
+				if (structGame.left == press)
+				{
+					structGame.left = press;
+					envoieClient(true, structGame, client, 4, press);
+				}
 				break;
 			case SDLK_RIGHT:
-				envoieClient(true, structGame, client, 3, press);
+				if (structGame.right == press)
+				{
+					structGame.right = press;
+					envoieClient(true, structGame, client, 3, press);
+				}
 				break;
 			case SDLK_UP:
 				envoieClient(true, structGame, client, 1, press);
