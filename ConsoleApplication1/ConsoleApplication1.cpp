@@ -354,7 +354,7 @@ void gameLoopClient(Game& structGame, Client *client, ClientUDP *clientUDP)
 	while (!Window.isClosed() && !structGame._exit)//Main loop
 	{
 
-		pollEventsClient(Window, structGame, client);
+		pollEventsClient(Window, &structGame, client);
 
 		char buff[sizeof(int) * 8 + 1];
 

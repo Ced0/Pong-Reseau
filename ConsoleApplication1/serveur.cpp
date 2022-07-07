@@ -182,17 +182,15 @@ void Serveur::ClientThread(SOCKET current_client, Game* structGame)
             bool press;
             unsigned char key;
 
+            key = buf[1];
+
             if ((buf[0] & 1) == 1)
             {
                 press = true;
-                std::cout << "pressed received" << endl;
             }
             else {
-                std::cout << "released received" << endl;
                 press = false;
             }
-            
-            key = buf[1];
 
             structGame->mute.lock();
             structGame->colliders_kinematic[1].keyboardEvents(key, press);

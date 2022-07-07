@@ -22,8 +22,8 @@ struct Game {
 
 	bool snd_paddle = false, snd_goal = false, snd_wall = false;
 
-	bool left = false;
-	bool right = false;
+	bool up = false;
+	bool down = false;
 
 	bool copie;
 
@@ -42,4 +42,4 @@ void receiveGame(char* buff, struct  Game* structGame);
 
 void pollEventsServeur(Window& window, Kinematic& player);
 
-void pollEventsClient(Window& window, struct Game structGame, Client* client);
+void pollEventsClient(Window& window, struct Game* structGame, Client* client);

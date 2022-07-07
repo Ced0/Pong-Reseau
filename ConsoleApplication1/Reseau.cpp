@@ -13,7 +13,7 @@ void receptionTCP(struct Game* structGame, Client* client) //Recepetion avec le 
 	structGame->_exit = true;
 }
 
-void envoieClient(bool playing, struct Game structGame, Client* client, unsigned char key, bool press)// Fonction d'envoie Client vers Serveur
+void envoieClient(bool playing, struct Game* structGame, Client* client, unsigned char key, bool press)// Fonction d'envoie Client vers Serveur
 {
 	char* buffer;
 	int sizePack;
@@ -23,9 +23,17 @@ void envoieClient(bool playing, struct Game structGame, Client* client, unsigned
 		sizePack = 2;
 		buffer = new char[sizePack];
 
-		unsigned char b = (press << 0);
+		unsigned char a;
 
-		*(buffer) = b;
+		if (press == true)
+		{
+			a = 1;
+		}
+		else {
+			a = 0;
+		}
+
+		*(buffer) = a;
 		*(buffer + 1) = key;
 
 		client->envoie(buffer, sizePack);
@@ -41,7 +49,7 @@ void envoieClient(bool playing, struct Game structGame, Client* client, unsigned
 
 
 
-	if (client->envoie(buffer, sizePack) != true && structGame._exit != true)//Si notre serveur c'est déja déjà déconnecter, on ne vérifie si le message a bien été envoyer
+	if (client->envoie(buffer, sizePack) != true && structGame->_exit != true)//Si notre serveur c'est déja déjà déconnecter, on ne vérifie si le message a bien été envoyer
 	{
 		std::cout << "Erreur envoie \n";
 	}
@@ -136,7 +144,7 @@ void pollEventsServeur(Window& window, Kinematic& player) //Lecture des entrées
 	}
 }
 
-void pollEventsClient(Window& window, struct Game structGame, Client* client) //Lecture des entrées sur le Client
+void pollEventsClient(Window& window, struct Game* structGame, Client* client) //Lecture des entrées sur le Client
 {
 	SDL_Event event;
 
@@ -159,28 +167,28 @@ void pollEventsClient(Window& window, struct Game structGame, Client* client) //
 			switch (event.key.keysym.sym)
 			{
 			case SDLK_LEFT:
-				if (structGame.left == press)
-				{
-					structGame.left = press;
-					envoieClient(true, structGame, client, 4, press);
-				}
+				envoieClient(true, structGame, client, 4, press);
 				break;
 			case SDLK_RIGHT:
-				if (structGame.right == press)
-				{
-					structGame.right = press;
-					envoieClient(true, structGame, client, 3, press);
-				}
+				envoieClient(true, structGame, client, 3, press);
 				break;
 			case SDLK_UP:
-				envoieClient(true, structGame, client, 1, press);
+				if (structGame->up != press)
+				{
+					structGame->up = press;
+					envoieClient(true, structGame, client, 1, press);
+				}
 				break;
 			case SDLK_DOWN:
-				envoieClient(true, structGame, client, 2, press);
+				if (structGame->down != press)
+				{
+					structGame->down = press;
+					envoieClient(true, structGame, client, 2, press);
+				}
 				break;
 			}
 
-			std::cout << "Event sent" << endl;
+			//std::cout << "Event sent" << endl;
 		}
 	}
 }
