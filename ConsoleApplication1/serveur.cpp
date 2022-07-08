@@ -173,10 +173,10 @@ void Serveur::ClientThread(SOCKET current_client, Game* structGame)
             closesocket(current_client);
             //std::terminate();
 
-            structGame->mute.lock();
+            //structGame->mute.lock();
             structGame->connecte = false;
             structGame->_exit = true;
-            structGame->mute.unlock();
+            //structGame->mute.unlock();
 
         }else{//We recieved the data
             bool press;

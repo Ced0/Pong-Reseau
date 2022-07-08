@@ -20,7 +20,7 @@ Client::Client()
 Client::Client(const char* ip,  unsigned int port)
 {
     int erreur;
-    #ifdef _WIN32
+    /*#ifdef _WIN32
     WSADATA init_win32;
 
 
@@ -28,7 +28,7 @@ Client::Client(const char* ip,  unsigned int port)
     if(erreur != 0)
         std::cout << "Erreur initialisation : " << erreur << " " << WSAGetLastError() << endl;
 
-    #endif
+    #endif*/
 
     mySocket = socket(AF_INET,SOCK_STREAM,0);
     if(mySocket == INVALID_SOCKET)
@@ -82,7 +82,7 @@ bool Client::connectSocket(const char* ip, unsigned int port)
 
 bool Client::envoie(const char *buffer, int size)
 {
-    int n = send(mySocket, buffer, size,0);
+    int n = send(mySocket, buffer, size, 0);
     if(n == SOCKET_ERROR)
     {
         std::cout << "Erreur envoie TCP : " << n << " " << WSAGetLastError() << endl;

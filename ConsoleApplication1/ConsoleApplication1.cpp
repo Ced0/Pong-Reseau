@@ -171,8 +171,6 @@ void gameLoopServeur(Game& structGame, ServerUDP* servUDP)//Fonction Jeu Serveur
 	Text text_score1(Window::renderer, "0", { 255, 0, 0, 255 }, police);
 	Text text_score2(Window::renderer, "0", { 255, 0, 0, 255 }, police);
 
-	std::thread threadEnvoie;
-
 	while (!Window.isClosed() && structGame.connecte == true)//Main loop
 	{
 
